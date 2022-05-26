@@ -21,3 +21,7 @@ input[type='color'] {
 input[type='color']:hover{
     transform: scale(1.05);
 }
+
+.active{
+    color: red;
+}

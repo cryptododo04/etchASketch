@@ -24,16 +24,16 @@
 
                     <div class="buttons">
                             <input class="colors" type="color">
-                            <button class="button">Selected Color</button>
-                            <button class="button" onclick="changeColor('#000000')">Black</button>
-                            <button  onclick="changeColor('#FFFFFF')">Erase</button>
-                            <button onclick="changeColor('#808080')">Gray</button>
-                            <button onclick="changeColor('random')">Random</button>
-                            <button onclick="resetTable()">reset</button>
+                            <button id="selectedColor" class="button">Selected Color</button>
+                            <button id="blackButton" class="button">Black</button>
+                            <button id="eraseButton" class="button">Erase</button>
+                            <button id= "grayButton" class="button">Gray</button>
+                            <button id="randomButton" class="button">Random</button>
+                            <button id= "resetButton" class="button">reset</button>
                     </div>
 
                     <div>
-                            <input type="text" name="" id="" placeholder="Size of table" value="16" onchange="changeSize(this.value)"/>
+                            <input type="text" id="size-input" value="16" onchange="changeSize(this.value)"/>
                             <button>Set Size</button>
                     </div>
             </div>

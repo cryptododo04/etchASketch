@@ -1,6 +1,7 @@
 //constant global variables
 const DEFAULT_COLOR = '#222222'
 const DEFAULT_MODE = 'color'
+
 const DEFAULT_SIZE = 16
 
 //global variables
@@ -8,28 +9,60 @@ let currentColor = DEFAULT_COLOR
 let currentMode = DEFAULT_MODE
 let currentSize = DEFAULT_SIZE
 
-
 //mouse variable to be able to paint while dragging
-let mouseDown = false
+let mouseDown = false;
 
-document.body.onmousedown = () => (mouseDown = true)
-document.body.onmouseup = () => (mouseDown = false)
+
+document.body.onmousedown = () => (mouseDown = true);
+document.body.onmouseup = () => (mouseDown = false);
 
 //DOM Elements
-const colorInput = document.querySelector('.colors')
+const colorInput = document.querySelector('.colors');
+const sizeInput = document.getElementById('size-input');
+const selectedColor = document.getElementById('selectedColor');
+const blackButton = document.getElementById('blackButton');
+const eraseButton = document.getElementById('eraseButton');
+const grayButton = document.getElementById('grayButton');
+const randomButton = document.getElementById('randomButton');
+const resetButton = document.getElementById('resetButton');
 
+
+//function to set new color
+function setCurrentColor(newColor) {
+    currentColor = newColor;
+  }
+
+  //function to set new mode
+  function setCurrentMode(newMode) {
+    activateButton(newMode)
+    currentMode = newMode;
+  }
 
 
 //Color input default color
-colorInput.value = currentColor
+colorInput.value = currentColor;
 
-colorInput.oninput = (e) => setCurrentColor(e.target.value)
+colorInput.oninput = (e) => setCurrentColor(e.target.value),
+
+selectedColor.onclick = () => setCurrentMode('color')
+blackButton.onclick = () => setCurrentMode('black')
+eraseButton.onclick = () => setCurrentMode('erase')
+grayButton.onclick = () => setCurrentMode('gray')
+randomButton.onclick = () => setCurrentMode('random')
+resetButton.onclick = () => resetTable();
 
 
 
 function setCurrentColor(newColor) {
     currentColor = newColor
   }
+
+  function setCurrentMode(newMode) {
+    activateButton(newMode)
+    currentMode = newMode
+  }
+
+  
 
   
 
@@ -85,6 +118,7 @@ function changeSize(input){
     else if(input < 2)
     {
         alert("Error, not enough squares");
+        sizeInput.value = DEFAULT_SIZE;
     }
     else
     {
@@ -95,13 +129,26 @@ function changeSize(input){
 function colorSquare(e){
 
     if(e.type === 'mouseover' && !mouseDown) return
-        if(currentColor === 'random')
+        if(currentMode === 'random')
         {
             e.target.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
         }
-        else
+        else if(currentMode === 'color')
         {
             e.target.style.backgroundColor = currentColor;
+        }
+        else if(currentMode === 'black')
+        {
+            
+            e.target.style.backgroundColor = '#000000';
+        }
+        else if(currentMode === 'erase')
+        {
+            e.target.style.backgroundColor = '#ffffff';
+        }
+        else if(currentMode === 'gray')
+        {
+            e.target.style.backgroundColor = '#808080';
         }
     }
 
@@ -121,18 +168,63 @@ function resetTable(){
 
 }
 
+//function to give and remove 'active' class to buttons for UX
+function activateButton(newMode) {
+    if (currentMode === 'random') 
+    {
+      randomButton.classList.remove('active')
+
+    }
+    else if (currentMode === 'color')
+    {
+      selectedColor.classList.remove('active')
+
+    } 
+    else if (currentMode === 'erase')
+    {
+      eraseButton.classList.remove('active')
+      
+    }
+    else if (currentMode === 'black')
+    {
+        blackButton.classList.remove('active')
+    }
+    else if (currentMode === 'gray')
+    {
+        grayButton.classList.remove('active')
+    }
+  
+    if (newMode === 'random')
+    {
+      randomButton.classList.add('active')
+
+    }
+    else if (newMode === 'color')
+    {
+      selectedColor.classList.add('active')
+
+    } 
+    else if (newMode === 'erase')
+    {
+      eraseButton.classList.add('active')
+    }
+    else if (newMode === 'black')
+    {
+      blackButton.classList.add('active')
+    }
+    else if (newMode === 'gray')
+    {
+      grayButton.classList.add('active')
+    }
+  }
 
 function inputChange(){
     
-    let colorInput = document.querySelector('.colors')
-
     color = colorInput.value
-
-    console.log(color)
-    console.log(colorInput.value)
 }
 
 
 window.onload = () => {
     populateTable(DEFAULT_SIZE)
+    activateButton(DEFAULT_MODE)
   }
