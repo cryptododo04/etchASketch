@@ -1,0 +1,23 @@
+.table{
+    width: 500px;
+    height: 500px;
+    display: grid;
+}
+
+* {
+    border: 1px red solid;
+}
+
+.flex-container{
+    user-select: none;
+}
+
+button,
+input[type='color'] {
+  transition: transform 0.1s ease-in-out;
+}
+
+.button:hover,
+input[type='color']:hover{
+    transform: scale(1.05);
+}
