@@ -172,7 +172,7 @@ function resetTable(){
 function activateButton(newMode) {
     if (currentMode === 'random') 
     {
-      randomButton.classList.remove('active')
+      randomButton.classList.remove('button-85')
 
     }
     else if (currentMode === 'color')
@@ -196,7 +196,7 @@ function activateButton(newMode) {
   
     if (newMode === 'random')
     {
-      randomButton.classList.add('active')
+      randomButton.classList.add('button-85')
 
     }
     else if (newMode === 'color')
