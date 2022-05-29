@@ -26,6 +26,9 @@ const grayButton = document.getElementById('grayButton');
 const randomButton = document.getElementById('randomButton');
 const resetButton = document.getElementById('resetButton');
 
+colorInput.style.backgroundColor = '#ededed'
+
+
 
 //function to set new color
 function setCurrentColor(newColor) {
