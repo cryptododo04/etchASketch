@@ -111,7 +111,7 @@ function populateTable(size){
 
 }
 
-
+//function to change size of grid 
 function changeSize(input){
 
     if(input >= 2 && input <= 100)
@@ -129,6 +129,7 @@ function changeSize(input){
     }
 }
 
+//function to color a square of the grid div
 function colorSquare(e){
 
     if(e.type === 'mouseover' && !mouseDown) return
