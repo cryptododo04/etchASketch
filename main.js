@@ -22,6 +22,7 @@ document.body.addEventListener('touchend', () => { mouseDown = false });
 
 
 //DOM Elements
+let table = document.querySelector('.table');
 const colorInput = document.querySelector('.colors');
 const sizeInput = document.getElementById('size-input');
 const selectedColor = document.getElementById('selectedColor');
@@ -130,6 +131,27 @@ function populateTable(size) {
     // The touch position is inside the bounds of the table, so call the colorSquare function
     colorSquare(e);
   });
+
+
+    // Add mouse support for desktop users
+    table.addEventListener('mousemove', (e) => {
+      // Check if the mouse is down
+      if (!mouseDown) return;
+    
+      // Get the mouse position
+      const mouseX = e.offsetX;
+      const mouseY = e.offsetY;
+    
+      // Check if the mouse position is inside the bounds of the table element
+      if (mouseX < 0 || mouseX > tableBounds.width || mouseY < 0 || mouseY > tableBounds.height) {
+        // The mouse position is outside the bounds of the table, so return without calling the colorSquare function
+        return;
+      }
+    
+      // The mouse position is inside the bounds of the table, so call the colorSquare function
+      colorSquare(e);
+    });
+    
 }
 
 
@@ -151,37 +173,30 @@ function changeSize(input){
     }
 }
 
-//function to color a square of the grid div
-function colorSquare(e) {
 
-  if (e.target.tagName !== 'DIV') {
-    return;
-  }
-
-  e.preventDefault();  // disable default behavior of touchmove
-
-  let square;
-  if (e.type === 'mouseover' || e.type === 'mousedown') {
-    square = e.target;
-  } else if (e.type === 'touchmove' || e.type === 'touchend') {
-    square = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-  }
-
-  // Color the square based on the current color and mode
-  if (square && mouseDown) {
-    if (currentMode === 'color') {
-      square.style.backgroundColor = currentColor;
-    } else if (currentMode === 'black') {
-      square.style.backgroundColor = 'black';
-    } else if (currentMode === 'erase') {
-      square.style.backgroundColor = 'white';
-    } else if (currentMode === 'gray') {
-      square.style.backgroundColor = '#ededed';
-    } else if (currentMode === 'random') {
-      square.style.backgroundColor = randomColor();
+  function colorSquare(e) {
+    // Get the touch position if the event is a touchmove event, or the mouse position if it's a mouseover or mousedown event
+    let x = e.touches ? e.touches[0].clientX : e.clientX;
+    let y = e.touches ? e.touches[0].clientY : e.clientY;
+  
+    let square = document.elementFromPoint(x, y);
+  
+    if (square && square.className === 'Square-element') {
+      if (currentMode === 'color') {
+        square.style.backgroundColor = currentColor;
+      } else if (currentMode === 'black') {
+        square.style.backgroundColor = 'black';
+      } else if (currentMode === 'erase') {
+        square.style.backgroundColor = 'white';
+      } else if (currentMode === 'gray') {
+        square.style.backgroundColor = 'gray';
+      } else if (currentMode === 'random') {
+        square.style.backgroundColor = randomColor();
+      }
     }
   }
-}
+
+
 
 function randomColor() {
   // Generate a random color in hexadecimal format
@@ -196,7 +211,6 @@ function changeColor(choice){
 //function to reset table
 function resetTable(){
 
-    let table = document.querySelector('.table');
 
     let squares = table.querySelectorAll("div");
 
