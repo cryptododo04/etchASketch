@@ -16,10 +16,9 @@ let mouseDown = false;
 document.body.onmousedown = () => (mouseDown = true);
 document.body.onmouseup = () => (mouseDown = false);
 
-
-//touch event listeners to have touch support on mobile devices
 document.body.addEventListener('touchstart', () => { mouseDown = true });
 document.body.addEventListener('touchend', () => { mouseDown = false });
+
 
 
 //DOM Elements
@@ -76,49 +75,59 @@ function setCurrentColor(newColor) {
   
 
 
+
 //create table of divs to paint
 function populateTable(size){
 
-    let table = document.querySelector('.table');
+  let table = document.querySelector('.table');
 
-    let squares = table.querySelectorAll("div");
+  let squares = table.querySelectorAll("div");
 
-    squares.forEach((div) => div.remove());
+  squares.forEach((div) => div.remove());
 
-    table.style.gridTemplateColumns = `repeat(${size} , 1fr)`;
+  table.style.gridTemplateColumns = `repeat(${size} , 1fr)`;
 
-    table.style.griTemplateRows = `repeat(${size} , 1fr)`;
+  table.style.griTemplateRows = `repeat(${size} , 1fr)`;
 
 
-    let amount = size * size
-    for (let i = 0; i < amount; i++){
+  let amount = size * size
+  for (let i = 0; i < amount; i++){
+          
+          let square = document.createElement('div');
+
+          square.addEventListener('mouseover', colorSquare)
+          
+          square.addEventListener('mousedown', colorSquare)
+
+          square.classList.add('Square-element')
+
+          square.addEventListener('dragstart', (e) => {
+              e.preventDefault()
+            })
             
-            let square = document.createElement('div');
+            square.addEventListener('drop', (e) => {
+              e.preventDefault()
+            })
 
-            square.addEventListener('mouseover', colorSquare)
-            
-            square.addEventListener('mousedown', colorSquare)
+          square.style.backgroundColor = 'white';
 
-            square.classList.add('Square-element')
+          // Add touch screen support for mobile users
+          square.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!e.touches) return;
+            colorSquare(e);
+          });
+          square.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (!e.touches) return;
+            colorSquare(e);
+          });
 
-            square.addEventListener('dragstart', (e) => {
-                e.preventDefault()
-              })
-              
-              square.addEventListener('drop', (e) => {
-                e.preventDefault()
-              })
-
-            square.style.backgroundColor = 'white';
-
-            table.insertAdjacentElement("beforeend", square);
-
-            square.addEventListener('touchmove', colorSquare);
-            square.addEventListener('touchend', colorSquare);
-
-    }
+          table.insertAdjacentElement("beforeend", square);
+  }
 
 }
+
 
 
 //function to change size of grid 
@@ -141,18 +150,27 @@ function changeSize(input){
 
 //function to color a square of the grid div
     function colorSquare(e) {
-      if ((e.type === 'mouseover' && !mouseDown) || e.type === 'touchmove') return;
-    
-      if (currentMode === 'random') {
-        e.target.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-      } else if (currentMode === 'color') {
+      
+
+      e.preventDefault();
+
+      console.log('colorSquare called'); // Add this line to log when the function is called
+      if (e.type === 'touchstart') e.preventDefault();
+      if (e.type === 'mouseover' && !mouseDown) return;
+      if (e.type === 'touchmove') return;
+      if (e.type === 'touchend') mouseDown = false;
+      if (e.type === 'touchstart') mouseDown = true;
+
+      if (currentMode === 'color') {
         e.target.style.backgroundColor = currentColor;
       } else if (currentMode === 'black') {
-        e.target.style.backgroundColor = DEFAULT_COLOR;
+        e.target.style.backgroundColor = '#000000';
       } else if (currentMode === 'erase') {
-        e.target.style.backgroundColor = 'white';
+        e.target.style.backgroundColor = '#ffffff';
       } else if (currentMode === 'gray') {
-        e.target.style.backgroundColor = '#ededed';
+        e.target.style.backgroundColor = '#7f7f7f';
+      } else if (currentMode === 'random') {
+        e.target.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
       }
     }
 
