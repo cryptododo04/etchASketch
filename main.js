@@ -175,6 +175,10 @@ function changeSize(input){
 
 
   function colorSquare(e) {
+
+    if (!mouseDown) {
+      return;
+    }
     // Get the touch position if the event is a touchmove event, or the mouse position if it's a mouseover or mousedown event
     let x = e.touches ? e.touches[0].clientX : e.clientX;
     let y = e.touches ? e.touches[0].clientY : e.clientY;
