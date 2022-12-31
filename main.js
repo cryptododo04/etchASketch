@@ -183,7 +183,10 @@ function colorSquare(e) {
   }
 }
 
-
+function randomColor() {
+  // Generate a random color in hexadecimal format
+  return '#' + Math.floor(Math.random()*16777215).toString(16);
+}
 
 //function to change colors
 function changeColor(choice){
