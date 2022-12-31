@@ -77,9 +77,9 @@ function setCurrentColor(newColor) {
 
 
 //create table of divs to paint
-function populateTable(size){
-
+function populateTable(size) {
   let table = document.querySelector('.table');
+  const tableBounds = table.getBoundingClientRect();
 
   let squares = table.querySelectorAll("div");
 
@@ -87,47 +87,50 @@ function populateTable(size){
 
   table.style.gridTemplateColumns = `repeat(${size} , 1fr)`;
 
-  table.style.griTemplateRows = `repeat(${size} , 1fr)`;
-
+  table.style.gridTemplateRows = `repeat(${size} , 1fr)`;
 
   let amount = size * size
-  for (let i = 0; i < amount; i++){
-          
-          let square = document.createElement('div');
+  for (let i = 0; i < amount; i++) {
+    let square = document.createElement('div');
 
-          square.addEventListener('mouseover', colorSquare)
-          
-          square.addEventListener('mousedown', colorSquare)
+    square.addEventListener('mouseover', colorSquare)
 
-          square.classList.add('Square-element')
+    square.addEventListener('mousedown', colorSquare)
 
-          square.addEventListener('dragstart', (e) => {
-              e.preventDefault()
-            })
-            
-            square.addEventListener('drop', (e) => {
-              e.preventDefault()
-            })
+    square.classList.add('Square-element')
 
-          square.style.backgroundColor = 'white';
+    square.addEventListener('dragstart', (e) => {
+      e.preventDefault()
+    })
 
-          // Add touch screen support for mobile users
-          square.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (!e.touches) return;
-            colorSquare(e);
-          });
-          square.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            if (!e.touches) return;
-            colorSquare(e);
-          });
+    square.addEventListener('drop', (e) => {
+      e.preventDefault()
+    })
 
-          table.insertAdjacentElement("beforeend", square);
+    square.style.backgroundColor = 'white';
+
+    table.insertAdjacentElement("beforeend", square);
   }
 
+  // Add touch screen support for mobile users
+  table.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!e.touches) return;
+  
+    // Get the touch position
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+  
+    // Check if the touch position is inside the bounds of the table element
+    if (touchX < tableBounds.left || touchX > tableBounds.right || touchY < tableBounds.top || touchY > tableBounds.bottom) {
+      // The touch position is outside the bounds of the table, so return without calling the colorSquare function
+      return;
+    }
+  
+    // The touch position is inside the bounds of the table, so call the colorSquare function
+    colorSquare(e);
+  });
 }
-
 
 
 //function to change size of grid 
@@ -149,30 +152,38 @@ function changeSize(input){
 }
 
 //function to color a square of the grid div
-    function colorSquare(e) {
-      
+function colorSquare(e) {
 
-      e.preventDefault();
+  if (e.target.tagName !== 'DIV') {
+    return;
+  }
 
-      console.log('colorSquare called'); // Add this line to log when the function is called
-      if (e.type === 'touchstart') e.preventDefault();
-      if (e.type === 'mouseover' && !mouseDown) return;
-      if (e.type === 'touchmove') return;
-      if (e.type === 'touchend') mouseDown = false;
-      if (e.type === 'touchstart') mouseDown = true;
+  e.preventDefault();  // disable default behavior of touchmove
 
-      if (currentMode === 'color') {
-        e.target.style.backgroundColor = currentColor;
-      } else if (currentMode === 'black') {
-        e.target.style.backgroundColor = '#000000';
-      } else if (currentMode === 'erase') {
-        e.target.style.backgroundColor = '#ffffff';
-      } else if (currentMode === 'gray') {
-        e.target.style.backgroundColor = '#7f7f7f';
-      } else if (currentMode === 'random') {
-        e.target.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-      }
+  let square;
+  if (e.type === 'mouseover' || e.type === 'mousedown') {
+    square = e.target;
+  } else if (e.type === 'touchmove' || e.type === 'touchend') {
+    square = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+  }
+
+  // Color the square based on the current color and mode
+  if (square && mouseDown) {
+    if (currentMode === 'color') {
+      square.style.backgroundColor = currentColor;
+    } else if (currentMode === 'black') {
+      square.style.backgroundColor = 'black';
+    } else if (currentMode === 'erase') {
+      square.style.backgroundColor = 'white';
+    } else if (currentMode === 'gray') {
+      square.style.backgroundColor = '#ededed';
+    } else if (currentMode === 'random') {
+      square.style.backgroundColor = randomColor();
     }
+  }
+}
+
+
 
 //function to change colors
 function changeColor(choice){
