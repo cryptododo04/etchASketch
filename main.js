@@ -16,6 +16,12 @@ let mouseDown = false;
 document.body.onmousedown = () => (mouseDown = true);
 document.body.onmouseup = () => (mouseDown = false);
 
+
+//touch event listeners to have touch support on mobile devices
+document.body.addEventListener('touchstart', () => { mouseDown = true });
+document.body.addEventListener('touchend', () => { mouseDown = false });
+
+
 //DOM Elements
 const colorInput = document.querySelector('.colors');
 const sizeInput = document.getElementById('size-input');
@@ -107,9 +113,13 @@ function populateTable(size){
 
             table.insertAdjacentElement("beforeend", square);
 
+            square.addEventListener('touchmove', colorSquare);
+            square.addEventListener('touchend', colorSquare);
+
     }
 
 }
+
 
 //function to change size of grid 
 function changeSize(input){
@@ -130,30 +140,20 @@ function changeSize(input){
 }
 
 //function to color a square of the grid div
-function colorSquare(e){
-
-    if(e.type === 'mouseover' && !mouseDown) return
-        if(currentMode === 'random')
-        {
-            e.target.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        }
-        else if(currentMode === 'color')
-        {
-            e.target.style.backgroundColor = currentColor;
-        }
-        else if(currentMode === 'black')
-        {
-            
-            e.target.style.backgroundColor = '#000000';
-        }
-        else if(currentMode === 'erase')
-        {
-            e.target.style.backgroundColor = '#ffffff';
-        }
-        else if(currentMode === 'gray')
-        {
-            e.target.style.backgroundColor = '#808080';
-        }
+    function colorSquare(e) {
+      if ((e.type === 'mouseover' && !mouseDown) || e.type === 'touchmove') return;
+    
+      if (currentMode === 'random') {
+        e.target.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      } else if (currentMode === 'color') {
+        e.target.style.backgroundColor = currentColor;
+      } else if (currentMode === 'black') {
+        e.target.style.backgroundColor = DEFAULT_COLOR;
+      } else if (currentMode === 'erase') {
+        e.target.style.backgroundColor = 'white';
+      } else if (currentMode === 'gray') {
+        e.target.style.backgroundColor = '#ededed';
+      }
     }
 
 //function to change colors
